@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jacqueline G. Orr</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f0f;
+      --bg-card: rgba(255,255,255,0.05);
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.2);
+      --text-primary: #f0f0ee;
+      --text-secondary: rgba(255,255,255,0.45);
+      --text-muted: rgba(255,255,255,0.2);
+      --accent-design: #378ADD;
+      --accent-lead: #1D9E75;
+      --accent-explore: #D85A30;
+      --grid-color: rgba(255,255,255,0.035);
+      --grid-size: 28px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      background-size: var(--grid-size) var(--grid-size);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(15,15,15,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid var(--border);
+    }
+    .nav-name { font-size: 14px; font-weight: 500; color: var(--text-primary); letter-spacing: 0.02em; cursor: pointer; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a { font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text-primary); }
+
+    /* ── PAGES ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── HERO ── */
+    .hero { max-width: 900px; margin: 0 auto; padding: 4rem 2rem 2.5rem; }
+    .hero-name { font-size: clamp(28px, 5vw, 42px); font-weight: 500; color: var(--text-primary); letter-spacing: -0.02em; margin-bottom: 0.75rem; line-height: 1.1; }
+    .hero-bio { font-size: 15px; color: var(--text-secondary); line-height: 1.7; max-width: 520px; margin-bottom: 1.5rem; }
+    .hero-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 99px; border: 0.5px solid var(--border-hover); color: var(--text-secondary); letter-spacing: 0.03em; }
+
+    /* ── GRID ── */
+    .grid-section { max-width: 900px; margin: 0 auto; padding: 0 2rem 4rem; }
+    .row-block { margin-bottom: 2.5rem; }
+    .row-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+    .row-accent { width: 18px; height: 1.5px; }
+    .row-label { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; }
+    .accent-design  { background: var(--accent-design); }
+    .accent-lead    { background: var(--accent-lead); }
+    .accent-explore { background: var(--accent-explore); }
+    .card-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+
+    /* ── PHOTO CARD ── */
+    .photo-card {
+      position: relative; aspect-ratio: 4/3;
+      border-radius: 8px; overflow: hidden;
+      border: 0.5px solid var(--border);
+      cursor: pointer;
+      background: var(--bg-card);
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .photo-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+    .photo-card img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(20%) brightness(0.85); transition: filter 0.3s, transform 0.4s; }
+    .photo-card:hover img { filter: grayscale(0%) brightness(1); transform: scale(1.03); }
+    .photo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg-card); color: var(--text-muted); font-size: 10px; letter-spacing: 0.05em; }
+    .card-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem 0.875rem 0.875rem; background: linear-gradient(transparent, rgba(0,0,0,0.75)); opacity: 0; transform: translateY(6px); transition: opacity 0.3s, transform 0.3s; }
+    .photo-card:hover .card-overlay { opacity: 1; transform: translateY(0); }
+    .card-title { font-size: 13px; font-weight: 500; color: #fff; line-height: 1.3; margin-bottom: 2px; }
+    .card-sub { font-size: 11px; color: rgba(255,255,255,0.6); }
+    .photo-card.design  { border-top: 2px solid var(--accent-design); }
+    .photo-card.lead    { border-top: 2px solid var(--accent-lead); }
+    .photo-card.explore { border-top: 2px solid var(--accent-explore); }
+
+    /* ── FOOTER ── */
+    footer { border-top: 0.5px solid var(--border); padding: 2.5rem 2rem; max-width: 900px; margin: 0 auto; }
+    .footer-logos-label { font-size: 10px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem; }
+    .footer-logos { display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .logo-item { opacity: 0.35; transition: opacity 0.2s; display: flex; align-items: center; gap: 8px; }
+    .logo-item:hover { opacity: 0.7; }
+    .logo-item img { height: 26px; width: auto; filter: grayscale(100%) brightness(3); object-fit: contain; }
+    .logo-item span { font-size: 12px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.04em; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .footer-name { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-size: 12px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text-primary); }
+
+    /* ── PROJECT DETAIL PAGE ── */
+    .project-page { max-width: 900px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+    .back-link { font-size: 13px; color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 2.5rem; transition: color 0.2s; cursor: pointer; }
+    .back-link:hover { color: var(--text-primary); }
+    .project-category { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem; }
+    .project-category.design  { color: var(--accent-design); }
+    .project-category.lead    { color: var(--accent-lead); }
+    .project-category.explore { color: var(--accent-explore); }
+    .project-title { font-size: clamp(22px, 4vw, 32px); font-weight: 500; color: var(--text-primary); letter-spacing: -0.02em; margin-bottom: 0.5rem; line-height: 1.2; }
+    .project-subtitle { font-size: 14px; color: var(--text-secondary); margin-bottom: 2.5rem; }
+    .project-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+    .project-image { width: 100%; aspect-ratio: 4/3; border-radius: 8px; overflow: hidden; border: 0.5px solid var(--border); }
+    .project-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .project-image-placeholder { width: 100%; height: 100%; min-height: 240px; display: flex; align-items: center; justify-content: center; background: var(--bg-card); color: var(--text-muted); font-size: 11px; letter-spacing: 0.05em; }
+    .project-content h3 { font-size: 13px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+    .project-content p { font-size: 14px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.25rem; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 1.5rem; }
+    .project-tag { font-size: 11px; padding: 3px 9px; border-radius: 99px; border: 0.5px solid var(--border-hover); color: var(--text-muted); }
+
+    /* ── ABOUT PAGE ── */
+    .about-section { max-width: 680px; margin: 0 auto; padding: 4rem 2rem; }
+    .about-section h2 { font-size: 22px; font-weight: 500; color: var(--text-primary); margin-bottom: 1.5rem; letter-spacing: -0.01em; }
+    .about-section p { font-size: 15px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.25rem; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .card-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .project-layout { grid-template-columns: 1fr; }
+      nav { padding: 0.875rem 1.25rem; }
+      .hero, .grid-section, footer, .project-page, .about-section { padding-left: 1.25rem; padding-right: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <span class="nav-name" onclick="showPage('home')">J. G. Orr</span>
+    <div class="nav-links">
+      <a href="#" onclick="showPage('home'); return false;">Work</a>
+      <a href="#" onclick="showPage('about'); return false;">About</a>
+      <a href="https://www.linkedin.com/in/jacqueline-orr-a73286149/" target="_blank">LinkedIn</a>
+      <a href="mailto:jgorr@mit.edu">Contact</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════
+       HOME PAGE
+  ════════════════════════════════════════ -->
+  <div id="page-home" class="page active">
+
+    <section class="hero">
+      <h1 class="hero-name">Jacqueline G. Orr</h1>
+      <p class="hero-bio">MIT engineer and Army Captain building at the intersection of advanced systems, operational leadership, and exploration.</p>
+      <div class="hero-pills">
+        <span class="pill">MIT 5.0 GPA</span>
+        <span class="pill">DoD SMART Scholar</span>
+        <span class="pill">173rd Airborne</span>
+        <span class="pill">28 Jumps</span>
+        <span class="pill">TS/SCI</span>
+      </div>
+    </section>
+
+    <section class="grid-section">
+
+      <!-- DESIGN -->
+      <div class="row-block">
+        <div class="row-header">
+          <div class="row-accent accent-design"></div>
+          <span class="row-label">Design</span>
+        </div>
+        <div class="card-row">
+          <div class="photo-card design" onclick="showProject('topology')">
+            <!-- <img src="images/topology.jpg" alt="Topology Optimization" /> -->
+            <div class="photo-placeholder">topology.jpg</div>
+            <div class="card-overlay"><div class="card-title">Topology Optimization</div><div class="card-sub">MIT Carstensen Group</div></div>
+          </div>
+          <div class="photo-card design" onclick="showProject('alpineboard')">
+            <!-- <img src="images/alpineboard.jpg" alt="Alpine Light Board" /> -->
+            <div class="photo-placeholder">alpineboard.jpg</div>
+            <div class="card-overlay"><div class="card-title">Alpine Light Board</div><div class="card-sub">PCB · Arduino · Streamlit</div></div>
+          </div>
+          <div class="photo-card design" onclick="showProject('blasttruss')">
+            <!-- <img src="images/blasttruss.jpg" alt="Blast Truss Design" /> -->
+            <div class="photo-placeholder">blasttruss.jpg</div>
+            <div class="card-overlay"><div class="card-title">Blast Truss Design</div><div class="card-sub">ARL Publication · USMA</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEAD -->
+      <div class="row-block">
+        <div class="row-header">
+          <div class="row-accent accent-lead"></div>
+          <span class="row-label">Lead</span>
+        </div>
+        <div class="card-row">
+          <div class="photo-card lead" onclick="showProject('dday')">
+            <!-- <img src="images/dday.jpg" alt="D-Day 80" /> -->
+            <div class="photo-placeholder">dday.jpg</div>
+            <div class="card-overlay"><div class="card-title">D-Day '80 Airborne Operation</div><div class="card-sub">Normandy, France</div></div>
+          </div>
+          <div class="photo-card lead" onclick="showProject('saberjunction')">
+            <!-- <img src="images/saberjunction.jpg" alt="Saber Junction" /> -->
+            <div class="photo-placeholder">saberjunction.jpg</div>
+            <div class="card-overlay"><div class="card-title">Saber Junction '22</div><div class="card-sub">Multinational · 173rd ABCT</div></div>
+          </div>
+          <div class="photo-card lead" onclick="showProject('itn')">
+            <!-- <img src="images/itn.jpg" alt="ITN Deployment" /> -->
+            <div class="photo-placeholder">itn.jpg</div>
+            <div class="card-overlay"><div class="card-title">ITN Deployment</div><div class="card-sub">Battalion-wide · 656 users</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPLORE -->
+      <div class="row-block">
+        <div class="row-header">
+          <div class="row-accent accent-explore"></div>
+          <span class="row-label">Explore</span>
+        </div>
+        <div class="card-row">
+          <div class="photo-card explore" onclick="showProject('montblanc')">
+            <!-- <img src="images/montblanc.jpg" alt="Mont Blanc" /> -->
+            <div class="photo-placeholder">montblanc.jpg</div>
+            <div class="card-overlay"><div class="card-title">Mont Blanc · 4,808m</div><div class="card-sub">Chamonix, France</div></div>
+          </div>
+          <div class="photo-card explore" onclick="showProject('climbing')">
+            <!-- <img src="images/climbing.jpg" alt="Rock Climbing" /> -->
+            <div class="photo-placeholder">climbing.jpg</div>
+            <div class="card-overlay"><div class="card-title">Technical Rock Climbing</div><div class="card-sub">Big wall routes</div></div>
+          </div>
+          <div class="photo-card explore" onclick="showProject('sfrg')">
+            <!-- <img src="images/sfrg.jpg" alt="SFRG" /> -->
+            <div class="photo-placeholder">sfrg.jpg</div>
+            <div class="card-overlay"><div class="card-title">SFRG Treasurer</div><div class="card-sub">2 years · soldier families</div></div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <footer>
+      <div class="footer-logos-label">Affiliations</div>
+      <div class="footer-logos">
+        <div class="logo-item">
+          <!-- <img src="images/logo-mit.png" alt="MIT" /> -->
+          <span>MIT</span>
+        </div>
+        <div class="logo-item">
+          <!-- <img src="images/logo-westpoint.png" alt="West Point" /> -->
+          <span>West Point</span>
+        </div>
+        <div class="logo-item">
+          <!-- <img src="images/logo-army.png" alt="U.S. Army" /> -->
+          <span>U.S. Army</span>
+        </div>
+        <div class="logo-item">
+          <!-- <img src="images/logo-carstensen.png" alt="Carstensen Group" /> -->
+          <span>Carstensen Group</span>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-name">Jacqueline G. Orr</span>
+        <div class="footer-links">
+          <a href="#" onclick="showPage('about'); return false;">About</a>
+          <a href="https://www.linkedin.com/in/jacqueline-orr-a73286149/" target="_blank">LinkedIn</a>
+          <a href="mailto:jgorr@mit.edu">jgorr@mit.edu</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       PROJECT DETAIL PAGE
+  ════════════════════════════════════════ -->
+  <div id="page-project" class="page">
+    <div class="project-page">
+      <span class="back-link" onclick="showPage('home')">← Back to work</span>
+      <div id="project-category" class="project-category"></div>
+      <h1 id="project-title" class="project-title"></h1>
+      <p id="project-subtitle" class="project-subtitle"></p>
+      <div class="project-layout">
+        <div class="project-image" id="project-image-wrap">
+          <div class="project-image-placeholder" id="project-placeholder"></div>
+        </div>
+        <div class="project-content">
+          <h3>About this project</h3>
+          <div id="project-body"></div>
+          <div id="project-tags" class="project-tags"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       ABOUT PAGE
+  ════════════════════════════════════════ -->
+  <div id="page-about" class="page">
+    <section class="about-section">
+      <span class="back-link" onclick="showPage('home')">← Back</span>
+      <h2>About</h2>
+      <p>I'm a U.S. Army Captain and MIT graduate engineer with a rare combination of hands-on technical experience, operational leadership, and advanced research credentials. I hold a DoD SMART Scholarship and am completing a Master's in Civil &amp; Environmental Engineering at MIT with a concentration in Topology Optimization and a 5.0 GPA.</p>
+      <p>Over eight years as an Army officer, I led technical teams, deployed complex network and communications systems across nine international deployments, and managed programs ranging from $2MM equipment integrations to Battalion-wide cloud network implementations.</p>
+      <p>At MIT, I've extended my technical depth through topology optimization research for additively manufactured parts, hands-on hardware and embedded systems development, and graduate coursework in Agentic AI and operations management.</p>
+      <p>I thrive in dynamic, fast-moving environments at the intersection of technology and operations — whether coordinating multinational airborne operations or rapidly prototyping a new hardware system from scratch.</p>
+      <p>Transitioning to industry as a Technical Program Manager or Systems/Mechanical Engineer. Open to defense tech, advanced systems engineering, and innovative hardware and technology companies.</p>
+    </section>
+  </div>
+
+  <script>
+    /* ── PROJECT DATA ──
+       Edit the text fields below to add your own descriptions.
+       To add a photo, replace imageSrc: '' with imageSrc: 'images/yourfile.jpg'
+    ── */
+    const projects = {
+      topology: {
+        category: 'Design', categoryClass: 'design',
+        title: 'Topology Optimization',
+        subtitle: 'MIT Carstensen Group · 2024–Present',
+        imageSrc: '', imagePlaceholder: 'topology.jpg',
+        body: `<p>As a researcher in the Carstensen Group at MIT, I developed a human-in-the-loop multi-material topology optimization algorithm that strengthens material interfaces and reduces premature failure in additively manufactured parts.</p>
+               <p>The work was presented at the Engineering Mechanics Institute Conference in Anaheim, CA (May 2025) and a co-authored publication is currently in progress.</p>
+               <p>[Add more detail about your research here — methods, findings, implications.]</p>`,
+        tags: ['Topology Optimization', 'Additive Manufacturing', 'MATLAB', 'FEA', 'MIT']
+      },
+      alpineboard: {
+        category: 'Design', categoryClass: 'design',
+        title: 'Alpine Light Board',
+        subtitle: 'Smart Climbing Training Device · MIT · 2025',
+        imageSrc: '', imagePlaceholder: 'alpineboard.jpg',
+        body: `<p>Designed and fabricated a smart hangboard for rock climbers that integrates custom PCB design, embedded Arduino programming, RGB LED hold indicators, and a Streamlit web application for workout programming and tracking.</p>
+               <p>The board attaches to a pull-up bar or tree branch, making it portable for approaches. LED indicators show which holds to use, and a load cell sensor tracks rest and work intervals.</p>
+               <p>[Add more detail about your design process, fabrication, and lessons learned here.]</p>`,
+        tags: ['PCB Design', 'Arduino', 'KiCad', 'Streamlit', 'Python', 'CNC Machining']
+      },
+      blasttruss: {
+        category: 'Design', categoryClass: 'design',
+        title: 'Blast Truss Design',
+        subtitle: 'Army Research Laboratory · West Point · 2018',
+        imageSrc: '', imagePlaceholder: 'blasttruss.jpg',
+        body: `<p>Won the 15th Annual MIT Soldier Design Competition for a novel underbody armor truss design to protect vehicles from buried blast events.</p>
+               <p>The project resulted in a published technical report: Orr et al., "Buried Blast Performance and Analysis of Additively Manufactured TI-6AL-4V Truss Structures," Army Research Laboratory Technical Report 8917, 2020.</p>
+               <p>[Add more detail about your design methodology, testing, and results here.]</p>`,
+        tags: ['Structural Engineering', 'Additive Manufacturing', 'Ti-6Al-4V', 'FEA', 'ARL']
+      },
+      dday: {
+        category: 'Lead', categoryClass: 'lead',
+        title: "D-Day '80 Commemorative Airborne Operation",
+        subtitle: 'Normandy, France · June 2024',
+        imageSrc: '', imagePlaceholder: 'dday.jpg',
+        body: `<p>Served as the Battalion Communications Officer for the 173rd Airborne Brigade Combat Team during the D-Day 80th Anniversary Commemorative Airborne Operation over Normandy, France.</p>
+               <p>Coordinated communication and network architecture across U.S. partner units and multinational stakeholders to support one of the most significant commemorative military operations in recent history.</p>
+               <p>[Add more detail about your role, the operation, and what made it significant here.]</p>`,
+        tags: ['173rd ABCT', 'Airborne Operations', 'Multinational', 'Communications', 'Normandy']
+      },
+      saberjunction: {
+        category: 'Lead', categoryClass: 'lead',
+        title: "Saber Junction '22",
+        subtitle: 'Multinational Exercise · 173rd ABCT · 2022',
+        imageSrc: '', imagePlaceholder: 'saberjunction.jpg',
+        body: `<p>Led communications and network integration for Saber Junction 2022, a large-scale multinational training exercise involving the 173rd Airborne Brigade Combat Team and partner nations across Europe.</p>
+               <p>Coordinated with U.S. partner units and multinational stakeholders to design, develop, and execute comprehensive communication and network architectures in a complex, dynamic environment.</p>
+               <p>[Add more detail about your specific role, challenges overcome, and outcomes here.]</p>`,
+        tags: ['173rd ABCT', 'Multinational', 'Network Architecture', 'Exercise Planning', 'NATO']
+      },
+      itn: {
+        category: 'Lead', categoryClass: 'lead',
+        title: 'Integrated Tactical Network Deployment',
+        subtitle: 'Battalion-wide Cloud Network · 173rd ABCT · 2022–2024',
+        imageSrc: '', imagePlaceholder: 'itn.jpg',
+        body: `<p>Led Battalion-wide implementation of the Army's new cloud-based Integrated Tactical Network — a next-generation communications infrastructure serving 656 personnel across multiple international operating environments.</p>
+               <p>Managed cross-functional coordination between vendor teams, multinational partners, and internal stakeholders to deliver a complex technical rollout on an operationally relevant timeline. The network supported two subsequent international deployments.</p>
+               <p>[Add more detail about the technical challenges, stakeholder management, and lessons learned here.]</p>`,
+        tags: ['Cloud Infrastructure', 'Program Management', 'Stakeholder Coordination', 'Army', 'ITN']
+      },
+      montblanc: {
+        category: 'Explore', categoryClass: 'explore',
+        title: 'Mont Blanc · 4,808m',
+        subtitle: 'Chamonix, France',
+        imageSrc: '', imagePlaceholder: 'montblanc.jpg',
+        body: `<p>Summited Mont Blanc, the highest peak in the Alps at 4,808 meters, via the Goûter Route from Chamonix, France.</p>
+               <p>[Add your story here — when you climbed it, who you went with, what the experience was like, and what it meant to you.]</p>
+               <p>[You can also mention Gran Paradiso and other summits in this section if you'd like to group your mountaineering here.]</p>`,
+        tags: ['Mountaineering', 'Alps', 'Mont Blanc', 'Chamonix', 'High Altitude']
+      },
+      climbing: {
+        category: 'Explore', categoryClass: 'explore',
+        title: 'Technical Rock Climbing',
+        subtitle: 'Big Wall Routes',
+        imageSrc: '', imagePlaceholder: 'climbing.jpg',
+        body: `<p>Technical rock climber with experience on multi-pitch and big wall routes.</p>
+               <p>[Add your climbing story here — where you've climbed, notable routes, how long you've been climbing, and what draws you to the sport. This is also a great place to connect the Alpine Light Board project to your personal passion for climbing.]</p>`,
+        tags: ['Rock Climbing', 'Big Wall', 'Trad Climbing', 'Multi-pitch']
+      },
+      sfrg: {
+        category: 'Explore', categoryClass: 'explore',
+        title: 'SFRG Treasurer',
+        subtitle: 'Family Readiness Group · Vicenza, Italy · 2 years',
+        imageSrc: '', imagePlaceholder: 'sfrg.jpg',
+        body: `<p>Served as Treasurer of the Soldier and Family Readiness Group (SFRG) for two years in Vicenza, Italy, supporting soldiers and their families stationed overseas with the 173rd Airborne Brigade Combat Team.</p>
+               <p>Managed group finances, coordinated events, and served as a resource for families navigating the unique challenges of military life abroad.</p>
+               <p>[Add more personal detail about what this experience meant to you and the impact you had on the community here.]</p>`,
+        tags: ['Community', 'Volunteer', 'Military Families', 'Leadership', 'Vicenza']
+      }
+    };
+
+    /* ── PAGE ROUTING ── */
+    function showPage(name) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + name).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function showProject(key) {
+      const p = projects[key];
+      if (!p) return;
+
+      document.getElementById('project-category').textContent = p.category;
+      document.getElementById('project-category').className = 'project-category ' + p.categoryClass;
+      document.getElementById('project-title').textContent = p.title;
+      document.getElementById('project-subtitle').textContent = p.subtitle;
+      document.getElementById('project-body').innerHTML = p.body;
+
+      const wrap = document.getElementById('project-image-wrap');
+      const placeholder = document.getElementById('project-placeholder');
+      wrap.innerHTML = '';
+      if (p.imageSrc) {
+        const img = document.createElement('img');
+        img.src = p.imageSrc;
+        img.alt = p.title;
+        wrap.appendChild(img);
+      } else {
+        const ph = document.createElement('div');
+        ph.className = 'project-image-placeholder';
+        ph.textContent = p.imagePlaceholder;
+        wrap.appendChild(ph);
+      }
+
+      const tagsEl = document.getElementById('project-tags');
+      tagsEl.innerHTML = p.tags.map(t => `<span class="project-tag">${t}</span>`).join('');
+
+      showPage('project');
+    }
+  </script>
+
+</body>
+</html>
