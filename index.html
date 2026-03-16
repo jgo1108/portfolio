@@ -131,11 +131,67 @@
     .about-section p { font-size: 15px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.25rem; }
 
     /* ── RESPONSIVE ── */
+
+    /* Large monitors (1400px+) */
+    @media (min-width: 1400px) {
+      .hero, .grid-section, footer, .project-page, .about-section {
+        max-width: 1100px;
+      }
+      .hero-name { font-size: 52px; }
+      .card-row { gap: 14px; }
+      .row-block { margin-bottom: 3rem; }
+    }
+
+    /* Tablet landscape (900px - 1200px) */
+    @media (max-width: 1200px) {
+      .hero, .grid-section, footer, .project-page, .about-section {
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+    }
+
+    /* Tablet portrait (640px - 900px) */
+    @media (max-width: 900px) {
+      .project-layout { grid-template-columns: 1fr; gap: 1.5rem; }
+      .project-image { aspect-ratio: 16/9; }
+      .nav-links { gap: 1rem; }
+    }
+
+    /* Phone (max 640px) */
     @media (max-width: 640px) {
-      .card-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .project-layout { grid-template-columns: 1fr; }
       nav { padding: 0.875rem 1.25rem; }
-      .hero, .grid-section, footer, .project-page, .about-section { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .nav-name { font-size: 13px; }
+      .nav-links a { font-size: 12px; }
+      .nav-links { gap: 0.75rem; }
+
+      .hero { padding: 2.5rem 1.25rem 2rem; }
+      .hero-name { font-size: 28px; }
+      .hero-bio { font-size: 14px; }
+
+      .grid-section { padding: 0 1.25rem 3rem; }
+      .card-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .row-block { margin-bottom: 2rem; }
+
+      .project-page { padding: 2rem 1.25rem 3rem; }
+      .project-layout { grid-template-columns: 1fr; gap: 1.25rem; }
+      .project-image { aspect-ratio: 4/3; }
+      .project-title { font-size: 22px; }
+      .project-content p { font-size: 13px; }
+
+      footer { padding: 2rem 1.25rem; }
+      .footer-logos { gap: 1.25rem; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      .footer-links { gap: 1rem; }
+
+      .about-section { padding: 2.5rem 1.25rem; }
+      .about-section p { font-size: 14px; }
+    }
+
+    /* Very small phones (max 380px) */
+    @media (max-width: 380px) {
+      .card-row { grid-template-columns: 1fr; }
+      .hero-name { font-size: 24px; }
+      .pill { font-size: 10px; padding: 3px 8px; }
     }
   </style>
 </head>
@@ -148,7 +204,7 @@
       <a href="#" onclick="showPage('home'); return false;">Work</a>
       <a href="#" onclick="showPage('about'); return false;">About</a>
       <a href="https://www.linkedin.com/in/jacqueline-orr-a73286149/" target="_blank">LinkedIn</a>
-      <a href="mailto:jgorr@mit.edu">Contact</a>
+      <a href="/cdn-cgi/l/email-protection#48222f273a3a0825213c662d2c3d">Contact</a>
     </div>
   </nav>
 
@@ -272,7 +328,7 @@
         <div class="footer-links">
           <a href="#" onclick="showPage('about'); return false;">About</a>
           <a href="https://www.linkedin.com/in/jacqueline-orr-a73286149/" target="_blank">LinkedIn</a>
-          <a href="mailto:jgorr@mit.edu">jgorr@mit.edu</a>
+          <a href="/cdn-cgi/l/email-protection#dfb5b8b0adad9fb2b6abf1babbaa"><span class="__cf_email__" data-cfemail="f8929f978a8ab895918cd69d9c8d">[email&#160;protected]</span></a>
         </div>
       </div>
     </footer>
@@ -315,7 +371,7 @@
     </section>
   </div>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     /* ── PROJECT DATA ──
        Edit the text fields below to add your own descriptions.
        To add a photo, replace imageSrc: '' with imageSrc: 'images/yourfile.jpg'
@@ -440,16 +496,5 @@
       } else {
         const ph = document.createElement('div');
         ph.className = 'project-image-placeholder';
-        ph.textContent = p.imagePlaceholder;
-        wrap.appendChild(ph);
+        ph.textContent = p.imagePl }
       }
-
-      const tagsEl = document.getElementById('project-tags');
-      tagsEl.innerHTML = p.tags.map(t => `<span class="project-tag">${t}</span>`).join('');
-
-      showPage('project');
-    }
-  </script>
-
-</body>
-</html>
